@@ -1,6 +1,5 @@
 import pandas as pd
 import plotly.express as px
-#from jupyter_dash import JupyterDash
 from dash import Dash, dcc, html, Input, Output, callback
 
 
@@ -59,7 +58,7 @@ def make_treemap(g):
     return px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS', title = 'Mean Model Emissions For Bugatti')
 
 app = Dash()
-
+server = app.server
 
 yr_min, yr_max = int(car_emissions["YEAR"].min()), int(car_emissions["YEAR"].max())
 
