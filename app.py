@@ -41,7 +41,7 @@ def make_treemap(g, brand):
     if g.empty:
         return px.treemap(title=f"No data for {brand}")
     agg_model = g.groupby(['MAKE','MODEL'], as_index=False)['EMISSIONS'].mean()
-    return px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS', title = f'Mean Model Emissions For {brand}}')
+    return px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS', title = f'Mean Model Emissions For {brand}')
 
 
 # Create my Dash server
