@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import plotly.express as px
 from dash import Dash, dcc, html, Input, Output
 
@@ -27,6 +28,7 @@ def make_line(g):
         return px.line(title="No data")
     line = px.line(g.groupby('YEAR', as_index=False)['EMISSIONS'].mean(), x='YEAR', y='EMISSIONS',
                title = '<b>Mean Emissions Over Time<b>')
+    line.update_xaxes(dtick=1, tickformat="d")
     return set_title(line)
 
 def make_bar(g):
@@ -40,6 +42,8 @@ def make_scatter(g):
     if g.empty:
         return px.scatter(title="No data")
     scatter = px.scatter(g, x='ENGINE SIZE', y='EMISSIONS', title='<b>Emissions by Engine Size<b>')
+    values = np.sort(g["ENGINE_SIZE"].dropna().unique())
+    scatter.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
     return set_title(scatter)
 
 def make_violin(g):
@@ -48,13 +52,22 @@ def make_violin(g):
     violin = px.violin(g, x='FUEL', y='EMISSIONS', title='<b>Emissions by Fuel Type<b>')
     return set_title(violin)
 
+#def make_treemap(g, brand):
+ #   if g.empty:
+  #      return px.treemap(title=f"No data for {brand}")
+   # agg_model = (g.groupby(['MAKE', 'MODEL'], as_index=False).agg(EMISSIONS=('EMISSIONS', 'mean'),
+      #                                                            owners = ('EMISSIONS', 'size')))
+    #treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='EMISSIONS',
+     #          color='owners', color_continuous_scale='Greens', title=f'<b>Mean Model Emissions For {brand}<b>')
+    #return set_title(treemap)
+
 def make_treemap(g, brand):
     if g.empty:
         return px.treemap(title=f"No data for {brand}")
     agg_model = (g.groupby(['MAKE', 'MODEL'], as_index=False).agg(EMISSIONS=('EMISSIONS', 'mean'),
                                                                   owners = ('EMISSIONS', 'size')))
-    treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='EMISSIONS',
-               color='owners', color_continuous_scale='Greens', title=f'<b>Mean Model Emissions For {brand}<b>')
+    treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='owners',
+               color='EMISSIONS', color_continuous_scale='YlOrRd', title=f'<b>Mean Model Emissions For {brand}<b>')
     return set_title(treemap)
 
 # Create my Dash server
@@ -73,7 +86,7 @@ app.layout = html.Div([
     dcc.RangeSlider(id = "years", min = yr_min, max = yr_max, value = [yr_min, yr_max],
                     step = 1, allowCross = False, marks = None,
                     tooltip = {"placement":"bottom","always_visible":True}),],
-                    style = {"display":"inline-block", "width":"380px"}),
+                    style = {"display":"inline-block", "width":"450px"}),
 
     # I add the brand widget for the treemap
     html.Div([html.Label("Treemap Brand"),
