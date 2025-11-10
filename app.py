@@ -59,7 +59,7 @@ app.layout = html.Div([
                     tooltip = {"placement":"bottom","always_visible":True}),
 
     # I add the brand widget for the treemap
-    dcc.Dropdown(id = "brand", options = car_emissions['MAKE'].sort_values(), value = default_brand,
+    dcc.Dropdown(id = "brand", options = car_emissions['MAKE'].drop_duplicates().sort_values(), value = default_brand,
                  placeholder = "Select a Brand for the Treemap"),
 
     # I add the plots
