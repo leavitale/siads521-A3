@@ -1,25 +1,9 @@
 import pandas as pd
 import plotly.express as px
-from dash import Dash, dcc, html, Input, Output, callback
-
-
+from dash import Dash, dcc, html, Input, Output
 
 #Load file
-car_emissions = pd.read_csv('/Fuel_Consumption_2000-2022.csv')
-
-#Drop NAs
-car_emissions.dropna(axis = 1, how = 'all', inplace = True)
-car_emissions.dropna(how = 'all', inplace = True)
-
-#Make make and class lower
-car_emissions.loc[:,'MAKE'] = car_emissions['MAKE'].str.lower()
-car_emissions.loc[:,'VEHICLE CLASS'] = car_emissions['VEHICLE CLASS'].str.lower()
-car_emissions.loc[:,'MODEL'] = car_emissions['MODEL'].str.lower()
-car_emissions.loc[:,'MODEL'] = car_emissions['MODEL'].str.lower()
-
-
-#Load file
-car_emissions = pd.read_csv('/Fuel_Consumption_2000-2022.csv')
+car_emissions = pd.read_csv('Fuel_Consumption_2000-2022.csv')
 
 #Drop NAs
 car_emissions.dropna(axis = 1, how = 'all', inplace = True)
