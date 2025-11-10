@@ -97,8 +97,8 @@ def update_all(year_range, brand):
 
     return (
         make_line(g),
-        make_treemap(g),
         make_treemap(g_treemap, brand),
+        make_bar(g),
         make_violin(g),
         make_scatter(g)
     )
