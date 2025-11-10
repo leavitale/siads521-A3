@@ -82,16 +82,16 @@ app.layout = html.Div([
     html.H1("Vehicle Emissions Dashboard", style={"textAlign": "center", "fontWeight":"bold"}),
 
     # I add the year slider
-    html.Div([html.Label("Year Range"),
-              dcc.RangeSlider(id = "years", min = yr_min, max = yr_max, value = [yr_min, yr_max],
-                              step = 1, allowCross = False, marks = None,
-                              tooltip = {"placement":"bottom","always_visible":True}),],
-             style = {"display":"inline-block", "width":"450px"}),
+    html.Label("Year Range"),
+    dcc.RangeSlider(id = "years", min = yr_min, max = yr_max, value = [yr_min, yr_max],
+                    step = 1, allowCross = False, marks = None,
+                    tooltip = {"placement":"bottom","always_visible":True}),
+
 
     # I add the brand widget for the treemap
-    html.Div([html.Label("Treemap Brand"),
+    html.Label("Treemap Brand"),
     dcc.Dropdown(id = "brand", options = car_emissions['MAKE'].drop_duplicates().sort_values(), value = default_brand,
-                 placeholder = "Select a Brand for the Treemap"),], style = {"display":"inline-block", "width":"300px"}),
+                 placeholder = "Select a Brand for the Treemap"),
 
     # I add a line break before my plots
     html.Br(),
