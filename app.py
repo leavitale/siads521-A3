@@ -39,13 +39,13 @@ def make_bar(g):
 def make_scatter(g):
     if g.empty:
         return px.scatter(title="No data")
-    scatter = px.scatter(g, x='ENGINE SIZE', y='EMISSIONS', title='<b>Emission by Engine Size<b>')
+    scatter = px.scatter(g, x='ENGINE SIZE', y='EMISSIONS', title='<b>Emissions by Engine Size<b>')
     return set_title(scatter)
 
 def make_violin(g):
     if g.empty:
         return px.violin(title="No data")
-    violin = px.violin(g, x='FUEL', y='EMISSIONS', title='<b>Emission by Fuel Type<b>')
+    violin = px.violin(g, x='FUEL', y='EMISSIONS', title='<b>Emissions by Fuel Type<b>')
     return set_title(violin)
 
 def make_treemap(g, brand):
@@ -69,29 +69,27 @@ app.layout = html.Div([
     html.H1("Vehicle Emissions Dashboard", style={"textAlign": "center", "fontWeight":"bold"}),
 
     # I add the year slider
-    html.Label("Year Range"),
+    html.Div([html.Label("Year Range"),
     dcc.RangeSlider(id = "years", min = yr_min, max = yr_max, value = [yr_min, yr_max],
                     step = 1, allowCross = False, marks = None,
-                    tooltip = {"placement":"bottom","always_visible":True},
+                    tooltip = {"placement":"bottom","always_visible":True}),],
                     style = {"display":"inline-block", "width":"380px"}),
 
     # I add the brand widget for the treemap
-    html.Label("Treemap Brand"),
+    html.Div([html.Label("Treemap Brand"),
     dcc.Dropdown(id = "brand", options = car_emissions['MAKE'].drop_duplicates().sort_values(), value = default_brand,
-                 placeholder = "Select a Brand for the Treemap", style = {"display":"inline-block", "width":"300px"}),
+                 placeholder = "Select a Brand for the Treemap"),], style = {"display":"inline-block", "width":"300px"}),
 
     # I add a line break before my plots
     html.Br(),
 
     # I add the plots
 
-        html.Div([dcc.Graph(id="line")], style={"width":"49%","display":"inline-block"}),
-        html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
-
-
-        html.Div([dcc.Graph(id="bar")], style={"width":"49%","display":"inline-block"}),
-        html.Div([dcc.Graph(id="violin")], style={"width":"49%","display":"inline-block"}),
-        html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),
+    html.Div([dcc.Graph(id="line")], style={"width":"49%","display":"inline-block"}),
+    html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
+    html.Div([dcc.Graph(id="bar")], style={"width":"49%","display":"inline-block"}),
+    html.Div([dcc.Graph(id="violin")], style={"width":"49%","display":"inline-block"}),
+    html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),
 
 ])
 
