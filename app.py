@@ -14,6 +14,7 @@ car_emissions.loc[:,'MAKE'] = car_emissions['MAKE'].str.lower()
 car_emissions.loc[:,'VEHICLE CLASS'] = car_emissions['VEHICLE CLASS'].str.lower()
 car_emissions.loc[:,'MODEL'] = car_emissions['MODEL'].str.lower()
 
+# I create my plot functions
 def make_line(g):
     if g.empty:
         return px.line(title="No data")
@@ -23,7 +24,8 @@ def make_line(g):
 def make_bar(g):
     if g.empty:
         return px.bar(title="No data")
-    return px.bar(g.groupby(['MAKE'], as_index=False)['EMISSIONS'].mean(), x = 'MAKE', y = 'EMISSIONS', title = 'Mean Car Emissions By Make')
+    return px.bar(g.groupby(['MAKE'], as_index=False)['EMISSIONS'].mean().sort_values(by=['EMISSIONS'], ascending=False),
+                  x = 'MAKE', y = 'EMISSIONS', title = 'Mean Car Emissions By Make')
 
 def make_scatter(g):
     if g.empty:
@@ -41,15 +43,20 @@ def make_treemap(g):
     agg_model = g.groupby(['MAKE','MODEL'], as_index=False)['EMISSIONS'].mean()
     return px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS', title = 'Mean Model Emissions For Bugatti')
 
+
+# Create my Dash server
 app = Dash()
 server = app.server
 
 yr_min, yr_max = int(car_emissions["YEAR"].min()), int(car_emissions["YEAR"].max())
 
 app.layout = html.Div([
+
+    # I add the year slider
     dcc.RangeSlider(id="years", min=yr_min, max=yr_max, value=[yr_min, yr_max],
                     step=1, allowCross=False, marks=None,
                     tooltip={"placement":"bottom","always_visible":True}),
+    # I add the plots
     html.Div([
         html.Div([dcc.Graph(id="line")], style={"width":"49%","display":"inline-block"}),
         html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
@@ -70,6 +77,8 @@ app.layout = html.Div([
     Output("scatter","figure"),
     Input("years","value"),
 )
+
+# I update the plots with the filters
 def update_all(year_range):
     y0, y1 = (yr_min, yr_max) if not year_range else (int(year_range[0]), int(year_range[1]))
     g = car_emissions[(car_emissions["YEAR"] >= y0) & (car_emissions["YEAR"] <= y1)]
@@ -81,5 +90,6 @@ def update_all(year_range):
         make_scatter(g)
     )
 
+# I run the dashboard
 if __name__ == '__main__':
     app.run(debug=True)
