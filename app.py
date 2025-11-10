@@ -40,16 +40,19 @@ def make_violin(g):
 def make_treemap(g, brand):
     if g.empty:
         return px.treemap(title=f"No data for {brand}")
-    agg_model = g.groupby(['MAKE','MODEL'], as_index=False)['EMISSIONS'].mean()
-    return px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS', title = f'Mean Model Emissions For {brand}')
-
+    #agg_model = g.groupby(['MAKE','MODEL'], as_index=False)['EMISSIONS'].mean()
+    agg_model = (g.groupby(['MAKE', 'MODEL'], as_index=False).agg(EMISSIONS=('EMISSIONS', 'mean'),
+                                                                  owners = ('EMISSIONS', 'size')))
+    return px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS',
+                      color = 'owners', color_continuous_scale='Greens', title = f'Mean Model Emissions For {brand}')
+#px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS', title = f'Mean Model Emissions For {brand}')
 
 # Create my Dash server
 app = Dash()
 server = app.server
 
 yr_min, yr_max = int(car_emissions["YEAR"].min()), int(car_emissions["YEAR"].max())
-default_brand = 'dodge' if 'dodge' in car_emissions['MAKE'].sort_values() else car_emissions['MAKE'].sort_values().iloc[0]
+default_brand = car_emissions['MAKE'].sort_values().iloc[0]
 
 app.layout = html.Div([
 
