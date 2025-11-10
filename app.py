@@ -10,7 +10,7 @@ car_emissions = pd.read_csv('Fuel_Consumption_2000-2022.csv')
 car_emissions.dropna(axis = 1, how = 'all', inplace = True)
 car_emissions.dropna(how = 'all', inplace = True)
 
-#Make make and class lower
+#Make make, class and model lower
 car_emissions.loc[:,'MAKE'] = car_emissions['MAKE'].str.lower()
 car_emissions.loc[:,'VEHICLE CLASS'] = car_emissions['VEHICLE CLASS'].str.lower()
 car_emissions.loc[:,'MODEL'] = car_emissions['MODEL'].str.lower()
@@ -67,7 +67,7 @@ def make_treemap(g, brand):
     agg_model = (g.groupby(['MAKE', 'MODEL'], as_index=False).agg(EMISSIONS=('EMISSIONS', 'mean'),
                                                                   owners = ('EMISSIONS', 'size')))
     treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='owners',
-               color='EMISSIONS', color_continuous_scale='YlOrRd', title=f'<b>Mean Model Emissions For {brand}<b>')
+               color='EMISSIONS', color_continuous_scale='Greens', title=f'<b>Mean Model Emissions For {brand}<b>')
     return set_title(treemap)
 
 # Create my Dash server
@@ -83,10 +83,10 @@ app.layout = html.Div([
 
     # I add the year slider
     html.Div([html.Label("Year Range"),
-    dcc.RangeSlider(id = "years", min = yr_min, max = yr_max, value = [yr_min, yr_max],
-                    step = 1, allowCross = False, marks = None,
-                    tooltip = {"placement":"bottom","always_visible":True}),],
-                    style = {"display":"inline-block", "width":"450px"}),
+              dcc.RangeSlider(id = "years", min = yr_min, max = yr_max, value = [yr_min, yr_max],
+                              step = 1, allowCross = False, marks = None,
+                              tooltip = {"placement":"bottom","always_visible":True}),],
+             style = {"display":"inline-block", "width":"450px"}),
 
     # I add the brand widget for the treemap
     html.Div([html.Label("Treemap Brand"),
@@ -98,11 +98,11 @@ app.layout = html.Div([
 
     # I add the plots
 
-    html.Div([dcc.Graph(id="line")], style={"width":"49%","display":"inline-block"}),
+    html.Div([html.Div([dcc.Graph(id="line")], style={"width":"49%","display":"inline-block"}),
     html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
     html.Div([dcc.Graph(id="bar")], style={"width":"49%","display":"inline-block"}),
     html.Div([dcc.Graph(id="violin")], style={"width":"49%","display":"inline-block"}),
-    html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),
+    html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),],)
 
 ])
 
