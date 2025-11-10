@@ -102,7 +102,7 @@ app.layout = html.Div([
     html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
     html.Div([dcc.Graph(id="bar")], style={"width":"49%","display":"inline-block"}),
     html.Div([dcc.Graph(id="violin")], style={"width":"49%","display":"inline-block"}),
-    html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),],)
+    html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),]),
 
 ])
 
