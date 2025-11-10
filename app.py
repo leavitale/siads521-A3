@@ -42,7 +42,7 @@ def make_scatter(g):
     if g.empty:
         return px.scatter(title="No data")
     scatter = px.scatter(g, x='ENGINE SIZE', y='EMISSIONS', title='<b>Emissions by Engine Size<b>')
-    values = np.sort(g["ENGINE_SIZE"].dropna().unique())
+    values = np.sort(g["ENGINE SIZE"].dropna().unique())
     scatter.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
     return set_title(scatter)
 
