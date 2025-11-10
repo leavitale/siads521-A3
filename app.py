@@ -14,38 +14,48 @@ car_emissions.loc[:,'MAKE'] = car_emissions['MAKE'].str.lower()
 car_emissions.loc[:,'VEHICLE CLASS'] = car_emissions['VEHICLE CLASS'].str.lower()
 car_emissions.loc[:,'MODEL'] = car_emissions['MODEL'].str.lower()
 
+# I create my title function
+def set_title(plot):
+    plot.layout.title.x = 0.5
+    plot.layout.title.xanchor = 'center'
+    plot.layout.title.font.size = 20
+    return plot
+
 # I create my plot functions
 def make_line(g):
     if g.empty:
         return px.line(title="No data")
-    return px.line(g.groupby('YEAR', as_index=False)['EMISSIONS'].mean(), x='YEAR', y='EMISSIONS',
-               title = 'Mean Emissions Over Time')
+    line = px.line(g.groupby('YEAR', as_index=False)['EMISSIONS'].mean(), x='YEAR', y='EMISSIONS',
+               title = '<b>Mean Emissions Over Time<b>')
+    return set_title(line)
 
 def make_bar(g):
     if g.empty:
         return px.bar(title="No data")
-    return px.bar(g.groupby(['MAKE'], as_index=False)['EMISSIONS'].mean().sort_values(by=['EMISSIONS'], ascending=False),
-                  x = 'MAKE', y = 'EMISSIONS', title = 'Mean Car Emissions By Make')
+    bar = px.bar(g.groupby(['MAKE'], as_index=False)['EMISSIONS'].mean().sort_values(by=['EMISSIONS'], ascending=False),
+           x='MAKE', y='EMISSIONS', title='Mean Car Emissions By Make')
+    return set_title(bar)
 
 def make_scatter(g):
     if g.empty:
         return px.scatter(title="No data")
-    return px.scatter(g, x = 'ENGINE SIZE', y = 'EMISSIONS', title = 'Emission by Engine Size')
+    scatter = px.scatter(g, x='ENGINE SIZE', y='EMISSIONS', title='Emission by Engine Size')
+    return set_title(scatter)
 
 def make_violin(g):
     if g.empty:
         return px.violin(title="No data")
-    return px.violin(g, x = 'FUEL', y = 'EMISSIONS', title = 'Emission by Fuel Type')
+    violin = px.violin(g, x='FUEL', y='EMISSIONS', title='Emission by Fuel Type')
+    return set_title(violin)
 
 def make_treemap(g, brand):
     if g.empty:
         return px.treemap(title=f"No data for {brand}")
-    #agg_model = g.groupby(['MAKE','MODEL'], as_index=False)['EMISSIONS'].mean()
     agg_model = (g.groupby(['MAKE', 'MODEL'], as_index=False).agg(EMISSIONS=('EMISSIONS', 'mean'),
                                                                   owners = ('EMISSIONS', 'size')))
-    return px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS',
-                      color = 'owners', color_continuous_scale='Greens', title = f'Mean Model Emissions For {brand}')
-#px.treemap(agg_model, path=['MAKE','MODEL'], values='EMISSIONS', title = f'Mean Model Emissions For {brand}')
+    treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='EMISSIONS',
+               color='owners', color_continuous_scale='Greens', title=f'Mean Model Emissions For {brand}')
+    return set_title(treemap)
 
 # Create my Dash server
 app = Dash()
@@ -95,8 +105,6 @@ def update_all(year_range, brand):
 
     # I also filter the treemap by the brand selected
     g_treemap = g[g['MAKE'] == brand]
-    # I add a clause so that if the year range makes it that the brand not have data, an empty treemap is returned
-    #treemap = make_treemap(g_treemap, brand) if not g_treemap.empty else
 
     return (
         make_line(g),
