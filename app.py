@@ -46,20 +46,12 @@ def make_scatter(g):
     scatter.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
     return set_title(scatter)
 
-def make_violin(g):
+def make_boxplot(g):
     if g.empty:
         return px.violin(title="No data")
-    violin = px.violin(g, x='FUEL', y='EMISSIONS', title='<b>Emissions by Fuel Type<b>')
+    violin = px.box(g, x='FUEL', y='EMISSIONS', title='<b>Emissions by Fuel Type<b>')
     return set_title(violin)
 
-#def make_treemap(g, brand):
- #   if g.empty:
-  #      return px.treemap(title=f"No data for {brand}")
-   # agg_model = (g.groupby(['MAKE', 'MODEL'], as_index=False).agg(EMISSIONS=('EMISSIONS', 'mean'),
-      #                                                            owners = ('EMISSIONS', 'size')))
-    #treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='EMISSIONS',
-     #          color='owners', color_continuous_scale='Greens', title=f'<b>Mean Model Emissions For {brand}<b>')
-    #return set_title(treemap)
 
 def make_treemap(g, brand):
     if g.empty:
@@ -97,11 +89,11 @@ app.layout = html.Div([
 
     # I add the plots
 
-        html.Div([html.Div([dcc.Graph(id="line")], style={"width":"49%","display":"inline-block"}),
-        html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
-        html.Div([dcc.Graph(id="bar")], style={"width":"49%","display":"inline-block"}),
-        html.Div([dcc.Graph(id="violin")], style={"width":"49%","display":"inline-block"}),
-        html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),]),
+    html.Div([html.Div([dcc.Graph(id="line")], style={"width":"49%","display":"inline-block"}),
+              html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
+              html.Div([dcc.Graph(id="bar")], style={"width":"49%","display":"inline-block"}),
+              html.Div([dcc.Graph(id="boxplot")], style={"width":"49%","display":"inline-block"}),]),
+             # html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),]),
 
 ])
 
@@ -109,8 +101,8 @@ app.layout = html.Div([
 @app.callback( Output("line","figure"),
                Output("treemap","figure"),
                Output("bar","figure"),
-               Output("violin","figure"),
-               Output("scatter","figure"),
+               Output("boxplot","figure"),
+              # Output("scatter","figure"),
                Input("years","value"),
                Input("brand","value"),
 )
@@ -128,8 +120,8 @@ def update_all(year_range, brand):
         make_line(g),
         make_treemap(g_treemap, brand),
         make_bar(g),
-        make_violin(g),
-        make_scatter(g)
+        make_boxplot(g),
+    #    make_scatter(g)
     )
 
 # I run the dashboard
