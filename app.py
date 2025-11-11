@@ -89,8 +89,8 @@ html.Div([html.Label("Boxplot Variable"),
             {"label":"Engine Size",   "value":"ENGINE SIZE"},
             {"label":"Vehicle Class", "value":"VEHICLE CLASS"},
             {"label":"Transmission",  "value":"TRANSMISSION"},
-        ], value = "FUEL",
-                 placeholder = "Select a variable for the boxplot"),], style = {"display":"inline-block", "width":"300px"}),
+        ], value = "FUEL", placeholder = "Select a variable for the boxplot"),],
+         style = {"display":"inline-block", "width":"300px"}),
 
     # I add a line break before my plots
     html.Br(),
