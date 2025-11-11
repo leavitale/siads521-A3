@@ -52,7 +52,6 @@ def make_boxplot(g):
     violin = px.box(g, x='FUEL', y='EMISSIONS', title='<b>Emissions by Fuel Type<b>')
     return set_title(violin)
 
-
 def make_treemap(g, brand):
     if g.empty:
         return px.treemap(title=f"No data for {brand}")
@@ -93,8 +92,6 @@ app.layout = html.Div([
               html.Div([dcc.Graph(id="treemap")], style={"width":"49%","display":"inline-block"}),
               html.Div([dcc.Graph(id="bar")], style={"width":"49%","display":"inline-block"}),
               html.Div([dcc.Graph(id="boxplot")], style={"width":"49%","display":"inline-block"}),]),
-             # html.Div([dcc.Graph(id="scatter")], style={"width":"49%","display":"inline-block"}),]),
-
 ])
 
 
@@ -102,7 +99,6 @@ app.layout = html.Div([
                Output("treemap","figure"),
                Output("bar","figure"),
                Output("boxplot","figure"),
-              # Output("scatter","figure"),
                Input("years","value"),
                Input("brand","value"),
 )
@@ -121,7 +117,6 @@ def update_all(year_range, brand):
         make_treemap(g_treemap, brand),
         make_bar(g),
         make_boxplot(g),
-    #    make_scatter(g)
     )
 
 # I run the dashboard
