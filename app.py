@@ -50,8 +50,8 @@ def make_treemap(g, brand):
         return px.treemap(title=f"No data for {brand}")
     agg_model = (g.groupby(['MAKE', 'MODEL'], as_index=False).agg(EMISSIONS=('EMISSIONS', 'mean'),
                                                                   owners = ('EMISSIONS', 'size')))
-    treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='owners',
-               color='EMISSIONS', color_continuous_scale='Greens', title=f'<b>Mean Model Emissions For {brand}<b>')
+    treemap = px.treemap(agg_model, path=['MAKE', 'MODEL'], values='EMISSIONS',
+               color='owners', color_continuous_scale='Greens', title=f'<b>Mean Model Emissions For {brand}<b>')
     return set_title(treemap)
 
 # Create my Dash server
