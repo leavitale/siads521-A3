@@ -42,11 +42,11 @@ def make_boxplot(g, dim = "FUEL"):
     if g.empty or dim not in g.columns:
         return px.box(title="No data")
 
-    boxplot = px.box(g, x=dim, y='EMISSIONS', points = 'all', title=f'<b>Emissions by {dim.title()}<b>')
+    boxplot = px.box(g, x=dim, y='EMISSIONS', points = 'all', title=f'<b>Emissions by {dim}<b>')
 
-    if pd.api.types.is_numeric_dtype(g[dim]):
-        values = np.sort(g[dim].dropna().unique())
-        boxplot.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
+   # if pd.api.types.is_numeric_dtype(g[dim]):
+   #     values = np.sort(g[dim].dropna().unique())
+    #    boxplot.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
 
     return set_title(boxplot)
 
@@ -81,16 +81,15 @@ app.layout = html.Div([
     dcc.Dropdown(id = "brand", options = car_emissions['MAKE'].drop_duplicates().sort_values(), value = default_brand,
                  placeholder = "Select a Brand for the Treemap"),], style = {"display":"inline-block", "width":"300px"}),
 
-html.Div([html.Label("Boxplot Variable"),
-    dcc.Dropdown(id = "dim", options = [
-            {"label":"Fuel Type",     "value":"FUEL"},
-            {"label":"Cylinders",     "value":"CYLINDERS"},
-            {"label":"Make",          "value":"MAKE"},
-            {"label":"Engine Size",   "value":"ENGINE SIZE"},
-            {"label":"Vehicle Class", "value":"VEHICLE CLASS"},
-            {"label":"Transmission",  "value":"TRANSMISSION"},
-        ], value = "FUEL", placeholder = "Select a variable for the boxplot"),],
-         style = {"display":"inline-block", "width":"300px"}),
+    html.Div([html.Label("Boxplot Variable"),
+    dcc.Dropdown(id = "dim", options = [{"label":"Fuel Type", "value":"FUEL"},
+                                        {"label":"Cylinders",     "value":"CYLINDERS"},
+                                        {"label":"Make",          "value":"MAKE"},
+                                        {"label":"Engine Size",   "value":"ENGINE SIZE"},
+                                        {"label":"Vehicle Class", "value":"VEHICLE CLASS"},
+                                        {"label":"Transmission",  "value":"TRANSMISSION"},
+                                        ], value = "FUEL", placeholder = "Select a variable for the boxplot"),],
+             style = {"display":"inline-block", "width":"300px"}),
 
     # I add a line break before my plots
     html.Br(),
