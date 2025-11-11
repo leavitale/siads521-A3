@@ -42,7 +42,7 @@ def make_boxplot(g, dim = "FUEL"):
     if g.empty or dim not in g.columns:
         return px.box(title="No data")
 
-    boxplot = px.box(g, x=dim, y='EMISSIONS', points = 'all', title=f'<b>Emissions by {dim}<b>')
+    boxplot = px.box(g, x=dim, y='EMISSIONS', title=f'<b>Emissions by {dim}<b>')
 
    # if pd.api.types.is_numeric_dtype(g[dim]):
    #     values = np.sort(g[dim].dropna().unique())
