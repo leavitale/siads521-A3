@@ -38,19 +38,17 @@ def make_bar(g):
            x='MAKE', y='EMISSIONS', title='<b>Mean Car Emissions By Make<b>')
     return set_title(bar)
 
-def make_scatter(g):
-    if g.empty:
-        return px.scatter(title="No data")
-    scatter = px.scatter(g, x='ENGINE SIZE', y='EMISSIONS', title='<b>Emissions by Engine Size<b>')
-    values = np.sort(g["ENGINE SIZE"].dropna().unique())
-    scatter.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
-    return set_title(scatter)
+def make_boxplot(g, dim = "FUEL"):
+    if g.empty or dim not in g.columns:
+        return px.box(title="No data")
 
-def make_boxplot(g):
-    if g.empty:
-        return px.violin(title="No data")
-    violin = px.box(g, x='FUEL', y='EMISSIONS', title='<b>Emissions by Fuel Type<b>')
-    return set_title(violin)
+    boxplot = px.box(g, x=dim, y='EMISSIONS', points = 'all', title=f'<b>Emissions by {dim.title()}<b>')
+
+    if pd.api.types.is_numeric_dtype(g[dim]):
+        values = np.sort(g[dim].dropna().unique())
+        boxplot.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
+
+    return set_title(boxplot)
 
 def make_treemap(g, brand):
     if g.empty:
@@ -83,6 +81,17 @@ app.layout = html.Div([
     dcc.Dropdown(id = "brand", options = car_emissions['MAKE'].drop_duplicates().sort_values(), value = default_brand,
                  placeholder = "Select a Brand for the Treemap"),], style = {"display":"inline-block", "width":"300px"}),
 
+html.Div([html.Label("Boxplot Variable"),
+    dcc.Dropdown(id = "dim", options = [
+            {"label":"Fuel Type",     "value":"FUEL"},
+            {"label":"Cylinders",     "value":"CYLINDERS"},
+            {"label":"Make (Brand)",  "value":"MAKE"},
+            {"label":"Engine Size",   "value":"ENGINE_SIZE"},
+            {"label":"Vehicle Class", "value":"VEHICLE_CLASS"},
+            {"label":"Transmission",  "value":"TRANSMISSION"},
+        ], value = "FUEL",
+                 placeholder = "Select a variable for the boxplot"),], style = {"display":"inline-block", "width":"300px"}),
+
     # I add a line break before my plots
     html.Br(),
 
@@ -101,6 +110,7 @@ app.layout = html.Div([
                Output("boxplot","figure"),
                Input("years","value"),
                Input("brand","value"),
+               Input("dim","value"),
 )
 
 # I update the plots with the filters
@@ -116,7 +126,7 @@ def update_all(year_range, brand):
         make_line(g),
         make_treemap(g_treemap, brand),
         make_bar(g),
-        make_boxplot(g),
+        make_boxplot(g, dim),
     )
 
 # I run the dashboard
