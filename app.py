@@ -113,7 +113,7 @@ app.layout = html.Div([
 )
 
 # I update the plots with the filters
-def update_all(year_range, brand):
+def update_all(year_range, brand, dim):
     # The dataset used will be filtered with the year slider
     y0, y1 = (yr_min, yr_max) if not year_range else (int(year_range[0]), int(year_range[1]))
     g = car_emissions[(car_emissions["YEAR"] >= y0) & (car_emissions["YEAR"] <= y1)]
