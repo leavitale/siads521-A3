@@ -43,11 +43,6 @@ def make_boxplot(g, dim = "FUEL"):
         return px.box(title="No data")
 
     boxplot = px.box(g, x=dim, y='EMISSIONS', title=f'<b>Emissions by {dim}<b>')
-
-   # if pd.api.types.is_numeric_dtype(g[dim]):
-   #     values = np.sort(g[dim].dropna().unique())
-    #    boxplot.update_xaxes(tickmode="array", tickvals=values, ticktext=[str(val) for val in values])
-
     return set_title(boxplot)
 
 def make_treemap(g, brand):
